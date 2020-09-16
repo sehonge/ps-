@@ -1,0 +1,41 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <functional>
+#include <set>
+using namespace std;
+
+#define ll long long
+vector<ll> p;
+set<ll> s;
+priority_queue<ll, vector<ll>, greater<ll>> pq;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL), cout.tie(NULL);
+	int i, K, N;
+	ll num, max_val, v;
+
+	cin >> K >> N;
+
+	max_val = 0;
+	for (i = 0; i < K; i++) {
+		cin >> num;
+		p.push_back(num), pq.push(num), s.insert(num);
+		max_val = max(num, max_val);
+	}
+	while (N) {
+		num = pq.top();
+		pq.pop();
+		N--;
+		for (i = 0; i < K; i++) {
+			v = num * p[i];
+			if (pq.size() >= N && v >= max_val) continue;
+			if(s.find(v) == s.end())
+				pq.push(v), s.insert(v), max_val = max(v, max_val);
+		}
+	}
+	cout << num;
+
+	return 0;
+}
