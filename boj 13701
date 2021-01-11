@@ -1,0 +1,38 @@
+/*
+문제: N개의 정수 A1, A2, ..., AN 을 읽고, 이들 중에서 반복되는 수를 제외하고 남은 N'개의 수 B1, B2, ..., BN’ 을 입력된 순서대로 출력하시오. 이때,
+
+0 ≤ Ai < 2^25 = 33554432, i=1,2,…,N.
+입력의 개수 N은 1 이상 500만 이하이다.
+
+입력
+첫째 줄에 A1, A2, ..., AN이 주어진다.
+
+출력
+B1, B2, ..., BN’을 출력한다.
+*/
+
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int cnt[((1 << 25) / 32) + 1]; // 표현할 수의 범위가 2^25가 최대이므로 32비트 정수 배열의 크기가 2^25 / 32= 1048576이면 된다.
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL), cout.tie(NULL);
+	int n, a, b;
+
+	while (scanf("%d", &n) != EOF) {
+		a = n / 32;
+		b = n % 32;
+		if (cnt[a] & (1 << b)) continue;
+		else {
+			cnt[a] += (1 << b);
+			cout << n << " ";
+		}
+	}
+	
+	return 0;
+}
