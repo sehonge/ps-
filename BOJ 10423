@@ -1,0 +1,58 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+#include <queue>
+using namespace std;
+
+vector<int> p, check;
+priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
+
+int find(int n) {
+	if (p[n] < 0 || check[n] == 1) return n;
+	return find(p[n]);
+}
+
+void merge(int u, int v) {
+	int pu, pv;
+	pu = find(u), pv = find(v);
+	
+	if (pu == pv) return;
+	if (check[pu] == 1) p[pv] = pu;
+	else if (check[pv] == 1) p[pu] = pv;
+	else p[pv] = pu;
+
+	return;
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL), cout.tie(NULL);
+	int i, N, M, K, u, v, w, num, ans, pu, pv;
+
+	cin >> N >> M >> K;
+	p.resize(N + 1, -1), check.resize(N + 1, 0);
+	for (i = 0; i < K; i++) {
+		cin >> num;
+		check[num] = 1;
+	}
+	for (i = 0; i < M; i++) {
+		cin >> u >> v >> w;
+		pq.push({ w, {u, v} });
+	}
+
+	ans = 0;
+	while (!pq.empty()) {
+		u = pq.top().second.first, v = pq.top().second.second, w = pq.top().first;
+		pq.pop();
+
+		pu = find(u), pv = find(v);
+		if ((pu == pv) || (check[pu] == 1 && check[pv] == 1)) continue;
+		merge(u, v);
+		ans += w;
+	}
+	cout << ans;
+
+	return 0;
+}
